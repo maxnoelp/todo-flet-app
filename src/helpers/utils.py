@@ -1,0 +1,5 @@
+gray = "#E6E8E6"
+gray_light = "#CED0CE"
+dark_mint = "#9FB8AD"
+dark_green = "#475841"
+dark_gray = "#3F403F"
