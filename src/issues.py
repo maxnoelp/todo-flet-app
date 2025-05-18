@@ -1,0 +1,182 @@
+import flet as ft
+from helpers.utils import gray, dark_mint, dark_green, dark_gray
+
+
+def IssueView(page):
+    heading = ft.Container(
+        content=(
+            ft.Text(
+                "Erstelle ein Todo",
+                size=30,
+                weight="bold",
+                color="black",
+            )
+        ),
+        margin=ft.margin.only(top=20),
+    )
+
+    # all issues
+    def NewIssue(event):
+        if not input_field.value == "":
+            checkbox = ft.Checkbox(
+                value=False,
+                fill_color=dark_gray,
+            )
+            text = ft.Text(
+                value=input_field.value,
+                size=20,
+                color="black",
+            )
+            issue_row = ft.Row(
+                controls=[
+                    checkbox,
+                    text,
+                ]
+            )
+            # all_issues.controls.append(issue_row)
+            # local storage
+            # load issues from storage
+            issues_list = page.client_storage.get("issues_list")
+            if issues_list is None:
+                issues_list = []
+
+            # new issue add list
+            new_issue = {
+                "checked": False,
+                "text": input_field.value,
+                "category": category.value,
+                "priority": prio_slider.value,
+            }
+            # print(new_issue)
+            issues_list.append(new_issue)
+            page.client_storage.set("issues_list", issues_list)
+
+            # clear input and update
+            input_field.value = ""
+            issues.update()
+
+            page.go("/")
+
+            # test
+            # data = page.client_storage.get("issues_list")
+            # page.client_storage.remove("issues_list")
+            # print(data)
+
+    # input field + button in one row
+    input_field = ft.TextField(
+        hint_text="Todo hinzufügen",
+        expand=True,
+        color="black",
+        autofocus=True,
+        border_color=dark_green,
+    )
+    input_field.on_submit = NewIssue
+    ok_button = ft.IconButton(
+        icon=ft.Icons.ADD,
+        bgcolor=dark_green,
+        icon_color=ft.Colors.WHITE,
+        on_click=NewIssue,
+    )
+    issue_view = ft.Column(
+        controls=[
+            ft.Row(
+                controls=[
+                    input_field,
+                    ok_button,
+                ]
+            )
+        ]
+    )
+
+    def VisibileOption(event):
+        option.visible = not option.visible
+        page.update()
+
+    option_switch = ft.Switch(
+        track_color=dark_mint,
+        active_color=dark_green,
+        inactive_thumb_color=dark_gray,
+        label="Optionen",
+        on_change=VisibileOption,
+    )
+
+    category = ft.Dropdown(
+        expand=True,
+        border_color=dark_green,
+        label="Kategorie",
+        color="black",
+        options=[
+            ft.dropdown.Option("Arbeit"),
+            ft.dropdown.Option("Freizeit"),
+            ft.dropdown.Option("Sport"),
+            ft.dropdown.Option("Einkaufen"),
+        ],
+    )
+
+    def SliderTextUpdate(event):
+        slider_header.content.value = f"Priorität {round(event.control.value)}%"
+        page.update()
+
+    prio_slider = ft.Slider(
+        active_color=dark_green,
+        inactive_color=dark_mint,
+        expand=True,
+        value=0,
+        min=0,
+        max=100,
+        divisions=5,
+        label="{value}%",
+        on_change=SliderTextUpdate,
+    )
+
+    slider_header = ft.Container(
+        content=(
+            ft.Text(
+                "Priorität",
+                size=16,
+                color="black",
+            )
+        ),
+        margin=ft.margin.only(top=20),
+    )
+
+    option = ft.Column(
+        controls=[
+            category,
+            slider_header,
+            prio_slider,
+        ],
+        visible=False,
+    )
+
+    option_box = ft.Container(
+        content=option,
+        margin=ft.margin.only(top=20),
+    )
+
+    menu = ft.Row(
+        controls=[
+            ft.IconButton(
+                icon=ft.Icons.CANCEL,
+                icon_color="black",
+                on_click=lambda _: page.go("/"),
+            ),
+        ],
+        alignment=ft.MainAxisAlignment.END,
+    )
+    issues = ft.Row(
+        controls=[
+            ft.Container(
+                bgcolor=gray,
+                height=780,
+                width=480,
+                border_radius=30,
+                content=ft.Column(
+                    controls=[menu, heading, issue_view, option_switch, option_box]
+                ),
+                padding=ft.padding.only(top=20, left=20, right=40),
+            )
+        ]
+    )
+
+    return issues
