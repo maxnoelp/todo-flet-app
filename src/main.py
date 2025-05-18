@@ -5,8 +5,8 @@ from navigation import routing
 
 
 def main(page: ft.Page):
-    page.window_height = 800
-    page.window_width = 500
+    page.window.height = 850
+    page.window.width = 500
     page.title = "Todo App"
     page.bgcolor = "black"
     home_container = ft.Container(
