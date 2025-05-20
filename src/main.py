@@ -1,32 +1,25 @@
 import flet as ft
-from helpers.utils import gray, gray_light, dark_mint, dark_green
-from home_page import HomePageView
-from navigation import routing
+from navbar.navbar import Navbar
+from router import Router
 
 
 def main(page: ft.Page):
+    page.navigation_bar = Navbar(page)
+    navbar_router = Router(page)
+    page.on_route_change = navbar_router.RouteChange
     page.window.height = 850
     page.window.width = 500
     page.title = "Todo App"
     page.bgcolor = "black"
-    home_container = ft.Container(
-        bgcolor=dark_mint,
-        height=780,
-        width=500,
-        border_radius=30,
-        content=ft.Stack(controls=[HomePageView(page)]),
-    )
 
     def route_change(event: ft.RouteChangeEvent):
         page.views.clear()
-        page.views.append(routing(page)[page.route])
         page.update()
 
     page.theme_mode = ft.ThemeMode.DARK
-    page.add(home_container)
+    # page.add(home_container)
     page.update()
-
-    page.on_route_change = route_change
+    page.add(navbar_router.body)
     # page.go("/issues")
 
 
