@@ -17,7 +17,6 @@ def IssueView(page):
 
     # all issues
     def NewIssue(event):
-        # all_issues.controls.append(issue_row)
         # local storage
         # load issues from storage
         issues_list = page.client_storage.get("issues_list")

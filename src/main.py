@@ -17,7 +17,6 @@ def main(page: ft.Page):
         page.update()
 
     page.theme_mode = ft.ThemeMode.DARK
-    # page.add(home_container)
     page.update()
     page.add(navbar_router.body)
     # page.go("/issues")
