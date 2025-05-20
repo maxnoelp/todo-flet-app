@@ -15,52 +15,13 @@ def HomePageView(page):
         page.window.visible = True
         page.update()
 
-    pop_menu = ft.PopupMenuButton(
-        icon=ft.Icons.MENU,
-        icon_color="black",
-        tooltip="Einstellungen",
-        items=[
-            ft.PopupMenuItem(
-                icon=ft.Icons.ADD,
-                text="To Do erstellen",
-                on_click=lambda _: page.go("/issues"),
-            ),
-            ft.PopupMenuItem(
-                icon=ft.Icons.ACCOUNT_BOX,
-                text="Benutzer",
-                on_click=lambda _: page.go("/"),
-            ),
-            ft.PopupMenuItem(
-                icon=ft.Icons.FULLSCREEN,
-                text="FullScreen",
-                on_click=FullScreen,
-            ),
-            ft.PopupMenuItem(),
-            ft.PopupMenuItem(
-                icon=ft.Icons.LOCK_CLOCK,
-                text="Sleep",
-                on_click=lambda _: SleepMode(900),
-            ),
-        ],
-    )
-    menu = ft.Row(
-        controls=[
-            pop_menu,
-            ft.IconButton(
-                icon=ft.Icons.POWER_SETTINGS_NEW_OUTLINED,
-                icon_color="black",
-                on_click=lambda _: page.window.close(),
-            ),
-        ],
-        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-    )
     heading = ft.Container(
         content=(
             ft.Text(
                 "Willkommen",
                 size=30,
                 weight="bold",
-                color="black",
+                color="white",
             )
         ),
         margin=ft.margin.only(top=20),
@@ -140,11 +101,9 @@ def HomePageView(page):
     )
 
     boxen = ft.Row(
-        controls=[
-            all_btn,
-            open_btn,
-            done_btn,
-        ]
+        controls=[all_btn, open_btn, done_btn],
+        alignment=ft.MainAxisAlignment.CENTER,  # Buttons stehen jetzt zentriert
+        spacing=20,  # optionaler Abstand zwischen den Buttons
     )
 
     issues = ft.Container(
@@ -208,14 +167,14 @@ def HomePageView(page):
                     checkbox = ft.Checkbox(
                         value=d["checked"],
                         fill_color=dark_gray,
-                        check_color="white",
+                        check_color=ft.Colors.TEAL_ACCENT_700,
                         on_change=lambda _, d=d: CheckboxChecked(d),
                     )
                     if d["checked"] is False:
                         text = ft.Text(
                             value=d["text"],
                             size=20,
-                            color="black",
+                            color=ft.Colors.TEAL_ACCENT_700,
                             width=350,
                         )
                     else:
@@ -341,26 +300,22 @@ def HomePageView(page):
         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
     )
 
-    home_page = ft.Row(
-        controls=[
-            ft.Container(
-                bgcolor=ft.Colors.PRIMARY,
-                height=780,
-                width=480,
-                border_radius=30,
-                content=ft.Column(
-                    controls=[
-                        menu,
-                        heading,
-                        boxen,
-                        edit_column,
-                        all_issues,
-                        issue_list,
-                    ]
-                ),
-                padding=ft.padding.only(top=20, left=20, right=40),
-            )
-        ]
+    home_page = ft.SafeArea(
+        ft.Row(
+            controls=[
+                ft.Container(
+                    content=ft.Column(
+                        controls=[
+                            heading,
+                            boxen,
+                            edit_column,
+                            all_issues,
+                            issue_list,
+                        ]
+                    ),
+                )
+            ]
+        )
     )
 
     LoadList()

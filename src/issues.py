@@ -9,7 +9,7 @@ def IssueView(page):
                 "Erstelle ein Todo",
                 size=30,
                 weight="bold",
-                color="black",
+                color="white",
             )
         ),
         margin=ft.margin.only(top=20),
@@ -17,50 +17,34 @@ def IssueView(page):
 
     # all issues
     def NewIssue(event):
-        if not input_field.value == "":
-            checkbox = ft.Checkbox(
-                value=False,
-                fill_color=dark_gray,
-            )
-            text = ft.Text(
-                value=input_field.value,
-                size=20,
-                color="black",
-            )
-            issue_row = ft.Row(
-                controls=[
-                    checkbox,
-                    text,
-                ]
-            )
-            # all_issues.controls.append(issue_row)
-            # local storage
-            # load issues from storage
-            issues_list = page.client_storage.get("issues_list")
-            if issues_list is None:
-                issues_list = []
+        # all_issues.controls.append(issue_row)
+        # local storage
+        # load issues from storage
+        issues_list = page.client_storage.get("issues_list")
+        if issues_list is None:
+            issues_list = []
 
-            # new issue add list
-            new_issue = {
-                "checked": False,
-                "text": input_field.value,
-                "category": category.value,
-                "priority": prio_slider.value,
-            }
-            # print(new_issue)
-            issues_list.append(new_issue)
-            page.client_storage.set("issues_list", issues_list)
+        # new issue add list
+        new_issue = {
+            "checked": False,
+            "text": input_field.value,
+            "category": category.value,
+            "priority": prio_slider.value,
+        }
+        # print(new_issue)
+        issues_list.append(new_issue)
+        page.client_storage.set("issues_list", issues_list)
 
-            # clear input and update
-            input_field.value = ""
-            issues.update()
+        # clear input and update
+        input_field.value = ""
+        issues.update()
 
-            page.go("/")
+        page.go("/")
 
-            # test
-            # data = page.client_storage.get("issues_list")
-            # page.client_storage.remove("issues_list")
-            # print(data)
+        # test
+        # data = page.client_storage.get("issues_list")
+        # page.client_storage.remove("issues_list")
+        # print(data)
 
     # input field + button in one row
     input_field = ft.TextField(
@@ -73,7 +57,6 @@ def IssueView(page):
     input_field.on_submit = NewIssue
     ok_button = ft.IconButton(
         icon=ft.Icons.ADD,
-        bgcolor=dark_green,
         icon_color=ft.Colors.WHITE,
         on_click=NewIssue,
     )
@@ -101,7 +84,6 @@ def IssueView(page):
     )
 
     category = ft.Dropdown(
-        expand=True,
         border_color=dark_green,
         label="Kategorie",
         color="black",
@@ -118,6 +100,7 @@ def IssueView(page):
         page.update()
 
     prio_slider = ft.Slider(
+        width=400,
         active_color=dark_green,
         inactive_color=dark_mint,
         expand=True,
@@ -167,10 +150,6 @@ def IssueView(page):
     issues = ft.Row(
         controls=[
             ft.Container(
-                bgcolor=gray,
-                height=780,
-                width=480,
-                border_radius=30,
                 content=ft.Column(
                     controls=[menu, heading, issue_view, option_switch, option_box]
                 ),
