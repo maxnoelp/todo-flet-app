@@ -1,5 +1,7 @@
-gray = "#E6E8E6"
-gray_light = "#CED0CE"
-dark_mint = "#9FB8AD"
-dark_green = "#475841"
-dark_gray = "#3F403F"
+"""Module to handle the colors in the Flet app."""
+
+GRAY = "#E6E8E6"
+GRAY_LIGHT = "#CED0CE"
+DARK_MINT = "#9FB8AD"
+DARK_GREEN = "#475841"
+DARK_GRAY = "#3F403F"

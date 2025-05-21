@@ -1,8 +1,23 @@
+"""Module to handle the issues view in the Flet app."""
+
 import flet as ft
-from helpers.utils import gray, dark_mint, dark_green, dark_gray
+from helpers.utils import DARK_MINT, DARK_GREEN, DARK_GRAY
 
 
-def IssueView(page):
+def issue_view(page):  # pylint: disable=too-many-locals, too-many-statements
+    """
+    Handles the issues view in the Flet app.
+
+    This view displays an input field and a button to add a new issue to the list.
+    It also displays a toggle switch to show/hide the options for the issue, which
+    include a dropdown for the category and a slider for the priority.
+
+    The page is updated whenever the user interacts with the input field or
+    the toggle switch.
+
+    :param page: The Flet page object.
+    :type page: flet.Page
+    """
     heading = ft.Container(
         content=(
             ft.Text(
@@ -16,9 +31,17 @@ def IssueView(page):
     )
 
     # all issues
-    def NewIssue(event):
+    def new_issue():
         # local storage
         # load issues from storage
+        """
+        Add a new issue to the list and save it to local storage.
+
+        Triggered by the "Add" button.
+
+        :param event: The event of the button click.
+        :type event: flet.Event
+        """
         issues_list = page.client_storage.get("issues_list")
         if issues_list is None:
             issues_list = []
@@ -51,15 +74,15 @@ def IssueView(page):
         expand=True,
         color="black",
         autofocus=True,
-        border_color=dark_green,
+        border_color=DARK_GREEN,
     )
-    input_field.on_submit = NewIssue
+    input_field.on_submit = new_issue
     ok_button = ft.IconButton(
         icon=ft.Icons.ADD,
         icon_color=ft.Colors.WHITE,
-        on_click=NewIssue,
+        on_click=new_issue,
     )
-    issue_view = ft.Column(
+    view_issue = ft.Column(
         controls=[
             ft.Row(
                 controls=[
@@ -70,20 +93,22 @@ def IssueView(page):
         ]
     )
 
-    def VisibileOption(event):
+    def visibile_option():
+        """Toggle the visibility of the option and update the page."""
+
         option.visible = not option.visible
         page.update()
 
     option_switch = ft.Switch(
-        track_color=dark_mint,
-        active_color=dark_green,
-        inactive_thumb_color=dark_gray,
+        track_color=DARK_MINT,
+        active_color=DARK_GREEN,
+        inactive_thumb_color=DARK_GRAY,
         label="Optionen",
-        on_change=VisibileOption,
+        on_change=visibile_option,
     )
 
     category = ft.Dropdown(
-        border_color=dark_green,
+        border_color=DARK_GREEN,
         label="Kategorie",
         color="black",
         options=[
@@ -94,21 +119,22 @@ def IssueView(page):
         ],
     )
 
-    def SliderTextUpdate(event):
+    def slider_text(event):
+        """Function to handle the slider in the Flet app."""
         slider_header.content.value = f"Priorität {round(event.control.value)}%"
         page.update()
 
     prio_slider = ft.Slider(
         width=400,
-        active_color=dark_green,
-        inactive_color=dark_mint,
+        active_color=DARK_GREEN,
+        inactive_color=DARK_MINT,
         expand=True,
         value=0,
         min=0,
         max=100,
         divisions=5,
         label="{value}%",
-        on_change=SliderTextUpdate,
+        on_change=slider_text,
     )
 
     slider_header = ft.Container(
@@ -150,7 +176,7 @@ def IssueView(page):
         controls=[
             ft.Container(
                 content=ft.Column(
-                    controls=[menu, heading, issue_view, option_switch, option_box]
+                    controls=[menu, heading, view_issue, option_switch, option_box]
                 ),
                 padding=ft.padding.only(top=20, left=20, right=40),
             )

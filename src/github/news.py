@@ -1,19 +1,23 @@
+"""Module to handle the github news view in the Flet app."""
+
 import flet as ft
 import requests
 
 
 def fetch_github_releases():
+    """Fetches the latest releases from GitHub."""
     url = "https://api.github.com/repos/maxnoelp/todo-flet-app/releases"
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=5)
         response.raise_for_status()
         return response.json()
-    except Exception as e:
+    except requests.exceptions.RequestException as e:
         print("Fehler beim Abrufen:", e)
         return []
 
 
-def NewsPage(page):
+def news_page(page):  # pylint: disable=unused-argument
+    """Displays the latest releases from GitHub."""
     releases = fetch_github_releases()
 
     if not releases:
@@ -42,4 +46,3 @@ def NewsPage(page):
             for release in releases
         ]
     )
-    return releases

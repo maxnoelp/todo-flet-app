@@ -1,3 +1,5 @@
+"""Module to handle the navbar theme in the Flet app."""
+
 import flet as ft
 
 theme = ft.Theme(
