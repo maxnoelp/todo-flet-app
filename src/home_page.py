@@ -1,19 +1,11 @@
+"""Module to handle the homepage view in the Flet app."""
+# pylint: disable=import-error
 import flet as ft
-from helpers.utils import gray, dark_mint, dark_green, dark_gray, gray_light
-from time import sleep
+from helpers.utils import DARK_MINT, DARK_GRAY
 
 
-def HomePageView(page):
-    def FullScreen(event=None):
-        page.window.full_screen = not page.window.full_screen
-        page.update()
-
-    def SleepMode(timer):
-        page.window.visible = False
-        page.update()
-        sleep(timer)
-        page.window.visible = True
-        page.update()
+def home_page_view(page):  # pylint: disable=too-many-locals, too-many-statements
+    """Function to handle the homepage view in the Flet app."""
 
     heading = ft.Container(
         content=(
@@ -27,7 +19,8 @@ def HomePageView(page):
         margin=ft.margin.only(top=20),
     )
 
-    def CountIssue(filter_option=None):
+    def count_issue(filter_option=None):
+        """Function to count the number of issues in the Flet app."""
         data = page.client_storage.get("issues_list")
         if data is not None:
             count = 0
@@ -41,14 +34,15 @@ def HomePageView(page):
             return count
         return 0
 
-    count_all = f"Alle({CountIssue(filter_option=None)})"
-    count_open = f"To Do({CountIssue(filter_option='unchecked')})"
-    count_done = f"Done({CountIssue(filter_option='checked')})"
+    count_all = f"Alle({count_issue(filter_option=None)})"
+    count_open = f"To Do({count_issue(filter_option='unchecked')})"
+    count_done = f"Done({count_issue(filter_option='checked')})"
 
-    def UpdateCount():
-        count_all = f"Alle({CountIssue(filter_option=None)})"
-        count_open = f"To Do({CountIssue(filter_option='unchecked')})"
-        count_done = f"Done({CountIssue(filter_option='checked')})"
+    def update_count():
+        """Function to update the count in the Flet app."""
+        count_all = f"Alle({count_issue(filter_option=None)})"
+        count_open = f"To Do({count_issue(filter_option='unchecked')})"
+        count_done = f"Done({count_issue(filter_option='checked')})"
 
         all_btn_count.content = ft.Text(count_all, size=16, color="white")
         open_btn_count.content = ft.Text(count_open, size=16, color="white")
@@ -61,9 +55,9 @@ def HomePageView(page):
     all_btn = ft.Container(
         content=ft.TextButton(
             content=all_btn_count,
-            on_click=lambda _: LoadList(filter_option="all"),
+            on_click=lambda _: load_list(filter_option="all"),
         ),
-        bgcolor=dark_mint,
+        bgcolor=DARK_MINT,
         height=80,
         width=140,
         border_radius=10,
@@ -76,9 +70,9 @@ def HomePageView(page):
     open_btn = ft.Container(
         content=ft.TextButton(
             content=open_btn_count,
-            on_click=lambda _: LoadList(filter_option="unchecked"),
+            on_click=lambda _: load_list(filter_option="unchecked"),
         ),
-        bgcolor=dark_mint,
+        bgcolor=DARK_MINT,
         height=80,
         width=140,
         border_radius=10,
@@ -91,9 +85,9 @@ def HomePageView(page):
     done_btn = ft.Container(
         content=ft.TextButton(
             content=done_btn_count,
-            on_click=lambda _: LoadList(filter_option="checked"),
+            on_click=lambda _: load_list(filter_option="checked"),
         ),
-        bgcolor=dark_mint,
+        bgcolor=DARK_MINT,
         height=80,
         width=140,
         border_radius=10,
@@ -120,7 +114,7 @@ def HomePageView(page):
         autofocus=True,
         visible=False,
         text_size=20,
-        border_color=dark_mint,
+        border_color=DARK_MINT,
         border_radius=10,
         color="black",
     )
@@ -137,17 +131,19 @@ def HomePageView(page):
         icon_color="red",
     )
 
-    def TextFieldVisible(d):
+    def text_field_visible(d):
+        """Function to handle the text field in the Flet app."""
         edit_issue.visible = not edit_issue.visible
         delete_issue.visible = not delete_issue.visible
         accept_btn.visible = not accept_btn.visible
         edit_issue.value = d["text"]
         page.update()
-        accept_btn.on_click = lambda _, d=d: SaveEditIssue(d, edit_issue.value)
-        delete_issue.on_click = lambda _, d=d: OpenModal(d)
-        edit_issue.on_submit = lambda _, d=d: SaveEditIssue(d, edit_issue.value)
+        accept_btn.on_click = lambda _, d=d: save_edit(d, edit_issue.value)
+        delete_issue.on_click = lambda _, d=d: open_modal(d)
+        edit_issue.on_submit = lambda _, d=d: save_edit(d, edit_issue.value)
 
-    def LoadList(filter_option=None):
+    def load_list(filter_option=None):
+        """Function to load the list in the Flet app."""
         if filter_option is None:
             filter_option = page.client_storage.get("filter_option")
         elif filter_option == "all":
@@ -166,9 +162,9 @@ def HomePageView(page):
                 ):
                     checkbox = ft.Checkbox(
                         value=d["checked"],
-                        fill_color=dark_gray,
+                        fill_color=DARK_GRAY,
                         check_color=ft.Colors.TEAL_ACCENT_700,
-                        on_change=lambda _, d=d: CheckboxChecked(d),
+                        on_change=lambda _, d=d: checkbox_checked(d),
                     )
                     if d["checked"] is False:
                         text = ft.Text(
@@ -194,8 +190,8 @@ def HomePageView(page):
                         )
                     edit_btn = ft.IconButton(
                         icon=ft.Icons.EDIT_NOTE,
-                        on_click=lambda _, d=d: TextFieldVisible(d),
-                        icon_color=dark_mint,
+                        on_click=lambda _, d=d: text_field_visible(d),
+                        icon_color=DARK_MINT,
                     )
                     issue_row = ft.Row(
                         controls=[
@@ -216,7 +212,8 @@ def HomePageView(page):
             all_issues.controls.append(no_issues)
             page.update()
 
-    def CheckboxChecked(d):
+    def checkbox_checked(d):
+        """Function to handle the checkbox in the Flet app."""
         data = page.client_storage.get("issues_list")
         if data is not None:
             for i in data:
@@ -224,11 +221,12 @@ def HomePageView(page):
                     i["checked"] = not i["checked"]
                     break
             page.client_storage.set("issues_list", data)
-            UpdateCount()
-            LoadList()
+            update_count()
+            load_list()
             page.update()
 
-    def SaveEditIssue(d, text):
+    def save_edit(d, text):
+        """Function to save the edit issue in the Flet app."""
         data = page.client_storage.get("issues_list")
         if data is not None:
             for i in data:
@@ -240,10 +238,11 @@ def HomePageView(page):
             edit_issue.value = ""
             delete_issue.visible = False
             accept_btn.visible = False
-            LoadList()
+            load_list()
             page.update()
 
-    def DeleteIssue(d, modal):
+    def delete_issue_func(d, modal):
+        """Function to delete the issue in the Flet app."""
         data = page.client_storage.get("issues_list")
         if data is not None:
             for i in data:
@@ -256,25 +255,29 @@ def HomePageView(page):
             delete_issue.visible = False
             accept_btn.visible = False
             page.close(modal)
-            UpdateCount()
-            LoadList()
+            update_count()
+            load_list()
             page.update()
 
-    def OpenModal(d):
+    def open_modal(d):
+        """Function to open the modal in the Flet app."""
         print("open modal")
         modal = ft.AlertDialog(
             modal=True,
             title=ft.Text("Todo löschen"),
             content=ft.Text(f"Möchtest du wirklich das Todo '{d['text']}' löschen?"),
             actions=[
-                ft.TextButton("Ja", on_click=lambda _, d=d: DeleteIssue(d, modal)),
-                ft.TextButton("Nein", on_click=lambda _: CloseModal(modal)),
+                ft.TextButton(
+                    "Ja", on_click=lambda _, d=d: delete_issue_func(d, modal)
+                ),
+                ft.TextButton("Nein", on_click=lambda _: close_modal(modal)),
             ],
             actions_alignment=ft.MainAxisAlignment.CENTER,
         )
         page.open(modal)
 
-    def CloseModal(modal):
+    def close_modal(modal):
+        """Function to close the modal in the Flet app."""
         page.close(modal)
         page.update()
 
@@ -318,6 +321,6 @@ def HomePageView(page):
         )
     )
 
-    LoadList()
+    load_list()
 
     return home_page

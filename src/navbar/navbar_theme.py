@@ -1,3 +1,6 @@
+"""Module to handle the navbar theme in the Flet app."""
+
+# pylint: disable=import-error
 import flet as ft
 
 theme = ft.Theme(
