@@ -1,5 +1,5 @@
 """Module to handle the homepage view in the Flet app."""
-
+# pylint: disable=import-error
 import flet as ft
 from helpers.utils import DARK_MINT, DARK_GRAY
 

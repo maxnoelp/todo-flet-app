@@ -1,5 +1,6 @@
 """Module to handle the github news view in the Flet app."""
 
+# pylint: disable=import-error
 import flet as ft
 import requests
 

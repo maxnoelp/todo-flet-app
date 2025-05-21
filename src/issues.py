@@ -1,5 +1,6 @@
 """Module to handle the issues view in the Flet app."""
 
+# pylint: disable=import-error
 import flet as ft
 from helpers.utils import DARK_MINT, DARK_GREEN, DARK_GRAY
 
