@@ -59,7 +59,7 @@ def navbar(page):
                 bgcolor=ft.Colors.LIME_50,
             ),
         ],
-        on_change=lambda _: call_page(navbar.selected_index),
+        on_change=lambda _: call_page(navbar_view.selected_index),
         bgcolor=ft.Colors.TEAL_ACCENT_700,
     )
 
